@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4Matka MONTAŻ — Kwalifikacja Ekipy Wykonawczej</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090a; --bg2: #101013; --bg3: #17171b; --bg4: #1d1d22;
+    --border: rgba(255,255,255,0.06); --border2: rgba(255,255,255,0.11); --border3: rgba(255,255,255,0.18);
+    --text: #eeebe5; --text2: #c8c4bc; --muted: #7a7772; --muted2: #4e4c49;
+    --accent: #c9b99a; --accent2: #e6d3b2; --gold: #b8982a;
+    --green: #4a9e6e; --green-bg: rgba(74,158,110,0.08);
+    --danger: #c46a4a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6;
+  }
+
+  .top-bar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(9,9,10,0.92); backdrop-filter: blur(16px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .top-inner {
+    max-width: 980px; margin: 0 auto; padding: 0.9rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between; gap: 1.5rem;
+  }
+  .top-label { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--accent2); }
+  .top-label em { font-style: italic; color: var(--muted); font-weight: 400; font-size: 0.78rem; margin-left: 0.5rem; }
+  .progress-track { flex: 1; max-width: 280px; height: 2px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--green)); transition: width 0.4s ease; }
+  .progress-pct { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); letter-spacing: 0.05em; min-width: 40px; text-align: right; }
+
+  #hero { max-width: 980px; margin: 0 auto; padding: 7rem 1.5rem 3rem; }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); display: flex; align-items: center; gap: 12px; margin-bottom: 1.6rem;
+  }
+  .hero-eyebrow::before { content: ''; width: 28px; height: 0.5px; background: var(--accent); }
+  h1 {
+    font-family: 'Playfair Display', serif; font-weight: 700; font-size: clamp(2rem, 4.5vw, 3.2rem);
+    line-height: 1.1; margin-bottom: 1rem;
+  }
+  h1 em { font-style: italic; color: var(--accent2); font-weight: 400; }
+  .hero-sub { font-size: 0.95rem; color: var(--muted); max-width: 560px; line-height: 1.75; }
+  .hero-meta { display: flex; gap: 2.5rem; margin-top: 2.2rem; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .meta-num { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--accent2); }
+  .meta-key { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); }
+
+  form { max-width: 980px; margin: 0 auto; padding: 0 1.5rem 6rem; }
+
+  .step {
+    background: var(--bg2); border: 0.5px solid var(--border); border-radius: 3px;
+    margin-bottom: 1px; padding: 2.4rem 2.2rem; position: relative; overflow: hidden;
+  }
+  .step::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%;
+    background: var(--border2); transition: background 0.3s;
+  }
+  .step.complete::before { background: var(--green); }
+
+  .step-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.8rem; }
+  .step-num {
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted2);
+    border: 0.5px solid var(--border2); border-radius: 1px; padding: 2px 8px; flex-shrink: 0;
+  }
+  .step.complete .step-num { color: var(--green); border-color: var(--green); background: var(--green-bg); }
+  .step-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; color: var(--text); }
+  .step-hint { font-size: 0.78rem; color: var(--muted2); margin-top: 0.3rem; margin-left: 4.2rem; margin-bottom: 0.6rem; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.1rem; }
+  .field { display: flex; flex-direction: column; gap: 0.5rem; }
+  .field.full { grid-column: 1 / -1; }
+  label {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); display: flex; align-items: center; gap: 6px;
+  }
+  label .req { color: var(--accent); }
+
+  input[type=text], input[type=email], input[type=tel], input[type=url], input[type=number], select, textarea {
+    background: var(--bg3); border: 0.5px solid var(--border2); border-radius: 2px;
+    color: var(--text); padding: 0.75rem 0.9rem; font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem; width: 100%; transition: border-color 0.2s, background 0.2s;
+  }
+  input::placeholder, textarea::placeholder { color: var(--muted2); }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); background: var(--bg4); }
+  textarea { resize: vertical; min-height: 110px; font-family: 'DM Sans', sans-serif; }
+  select { appearance: none; cursor: pointer; }
+
+  .check-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 0.6rem; }
+  .check-item {
+    display: flex; align-items: center; gap: 0.65rem; padding: 0.65rem 0.85rem;
+    background: var(--bg3); border: 0.5px solid var(--border2); border-radius: 2px;
+    cursor: pointer; transition: border-color 0.15s, background 0.15s; font-size: 0.82rem; color: var(--text2);
+  }
+  .check-item:hover { border-color: var(--border3); }
+  .check-item input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+  .check-item.checked { border-color: var(--accent); background: rgba(201,185,154,0.06); color: var(--accent2); }
+
+  /* CREW members — repeatable rows */
+  .crew-row {
+    display: grid; grid-template-columns: 1.4fr 1.2fr 1fr 0.8fr auto;
+    gap: 0.7rem; align-items: end; margin-bottom: 0.8rem; padding-bottom: 0.8rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .crew-row:last-of-type { border-bottom: none; }
+  .btn-add {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent); background: transparent; border: 0.5px solid var(--accent); border-radius: 2px;
+    padding: 0.55rem 1rem; cursor: pointer; transition: all 0.2s; margin-top: 0.5rem;
+  }
+  .btn-add:hover { background: rgba(201,185,154,0.08); }
+  .btn-remove {
+    background: transparent; border: 0.5px solid var(--border2); color: var(--muted);
+    border-radius: 2px; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; transition: all 0.2s;
+  }
+  .btn-remove:hover { border-color: var(--danger); color: var(--danger); }
+
+  .upload-zone {
+    border: 1px dashed var(--border3); border-radius: 3px; padding: 2rem;
+    text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+    background: var(--bg3);
+  }
+  .upload-zone:hover, .upload-zone.dragover { border-color: var(--accent); background: rgba(201,185,154,0.04); }
+  .upload-zone-icon { font-size: 1.6rem; color: var(--muted2); margin-bottom: 0.6rem; }
+  .upload-zone-text { font-size: 0.82rem; color: var(--muted); }
+  .upload-zone-text strong { color: var(--accent2); font-weight: 500; }
+  #file-list { margin-top: 0.8rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .file-chip {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--bg4); border: 0.5px solid var(--border2); border-radius: 2px;
+    padding: 0.5rem 0.8rem; font-size: 0.78rem; color: var(--text2);
+  }
+
+  /* Availability calendar-style chips */
+  .avail-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.5rem; }
+  .avail-chip {
+    text-align: center; padding: 0.6rem 0.3rem; background: var(--bg3); border: 0.5px solid var(--border2);
+    border-radius: 2px; cursor: pointer; font-size: 0.72rem; color: var(--muted); transition: all 0.15s;
+  }
+  .avail-chip.active { border-color: var(--green); background: var(--green-bg); color: var(--green); }
+
+  .disclaimer {
+    max-width: 980px; margin: 0 auto; padding: 0 1.5rem 2rem;
+    font-size: 0.78rem; color: var(--muted); line-height: 1.7; font-style: italic;
+    border-top: 0.5px solid var(--border); padding-top: 1.8rem;
+  }
+  .submit-row { max-width: 980px; margin: 0 auto; padding: 0 1.5rem 6rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+  .btn-submit {
+    font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+    background: var(--accent); color: var(--bg); border: none; border-radius: 2px;
+    padding: 1rem 2.4rem; cursor: pointer; font-weight: 500; transition: background 0.2s;
+  }
+  .btn-submit:hover { background: var(--accent2); }
+  .submit-note { font-size: 0.78rem; color: var(--muted2); }
+
+  #success { display: none; max-width: 600px; margin: 7rem auto; padding: 0 1.5rem; text-align: center; }
+  #success.show { display: block; }
+  #success .mark { font-size: 2.4rem; color: var(--green); margin-bottom: 1rem; }
+  #success h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.8rem; }
+  #success p { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+  footer {
+    max-width: 980px; margin: 0 auto; padding: 2rem 1.5rem; border-top: 0.5px solid var(--border);
+    display: flex; justify-content: space-between; font-family: 'DM Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted2);
+  }
+
+  @media (max-width: 720px) {
+    .grid, .grid-3 { grid-template-columns: 1fr; }
+    .crew-row { grid-template-columns: 1fr 1fr; }
+    .avail-grid { grid-template-columns: repeat(4, 1fr); }
+    .step { padding: 1.8rem 1.4rem; }
+    .step-hint { margin-left: 0; }
+    .hero-meta { gap: 1.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="top-inner">
+    <div class="top-label">4Matka MONTAŻ<em>kwalifikacja ekipy</em></div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-pct" id="progressPct">0%</div>
+  </div>
+</div>
+
+<section id="hero">
+  <div class="hero-eyebrow">AlPocket / WallStory — Onboarding Wykonawczy</div>
+  <h1>Zostań ekipą<br><em>wykonawczą WallStory.</em></h1>
+  <p class="hero-sub">
+    To kwalifikacja techniczna ekip montażowych do bazy wykonawców WallStory, z której system
+    będzie automatycznie dobierał zespół do realizacji — według zasięgu, dostępności,
+    rodzaju podłoża i terminu.
+  </p>
+  <div class="hero-meta">
+    <div class="meta-item"><span class="meta-num">12</span><span class="meta-key">Sekcji</span></div>
+    <div class="meta-item"><span class="meta-num">~10</span><span class="meta-key">Minut</span></div>
+    <div class="meta-item"><span class="meta-num">JSON</span><span class="meta-key">Gotowe pod API</span></div>
+  </div>
+</section>
+
+<form id="qualForm" novalidate>
+
+  <!-- 01 — DANE EKIPY -->
+  <div class="step" data-step="1">
+    <div class="step-head"><span class="step-num">01</span><span class="step-title">Dane ekipy</span></div>
+    <div class="step-hint">Podstawowa identyfikacja — firma lub działalność jednoosobowa.</div>
+    <div class="grid">
+      <div class="field"><label>Nazwa firmy / ekipy <span class="req">*</span></label><input type="text" name="crew_name" required placeholder="np. MontaTeam Wrocław"></div>
+      <div class="field"><label>NIP <span class="req">*</span></label><input type="text" name="nip" required placeholder="000-000-00-00"></div>
+      <div class="field"><label>E-mail <span class="req">*</span></label><input type="email" name="email" required placeholder="kontakt@ekipa.pl"></div>
+      <div class="field"><label>Telefon <span class="req">*</span></label><input type="tel" name="phone" required placeholder="+48"></div>
+      <div class="field"><label>Osoba kontaktowa / lider ekipy</label><input type="text" name="contact_person" placeholder="Imię i nazwisko"></div>
+      <div class="field"><label>Strona WWW / social</label><input type="url" name="website" placeholder="https://"></div>
+    </div>
+  </div>
+
+  <!-- 02 — LOKALIZACJA I ZASIĘG -->
+  <div class="step" data-step="2">
+    <div class="step-head"><span class="step-num">02</span><span class="step-title">Lokalizacja i zasięg</span></div>
+    <div class="step-hint">Skąd wyjeżdżacie i jak daleko realnie dojeżdżacie.</div>
+    <div class="grid">
+      <div class="field full"><label>Adres bazowy <span class="req">*</span></label><input type="text" name="address" required placeholder="Miasto, województwo"></div>
+      <div class="field">
+        <label>Województwo bazowe <span class="req">*</span></label>
+        <select name="voivodeship" required>
+          <option value="">Wybierz</option>
+          <option>Dolnośląskie</option><option>Kujawsko-pomorskie</option><option>Lubelskie</option>
+          <option>Lubuskie</option><option>Łódzkie</option><option>Małopolskie</option>
+          <option>Mazowieckie</option><option>Opolskie</option><option>Podkarpackie</option>
+          <option>Podlaskie</option><option>Pomorskie</option><option>Śląskie</option>
+          <option>Świętokrzyskie</option><option>Warmińsko-mazurskie</option><option>Wielkopolskie</option>
+          <option>Zachodniopomorskie</option>
+        </select>
+      </div>
+      <div class="field"><label>Maks. realny zasięg dojazdu (km)</label><input type="number" name="travel_range" placeholder="150"></div>
+    </div>
+  </div>
+
+  <!-- 03 — SKŁAD EKIPY -->
+  <div class="step" data-step="3">
+    <div class="step-head"><span class="step-num">03</span><span class="step-title">Skład ekipy</span></div>
+    <div class="step-hint">Kto realnie jedzie na montaż — dodaj każdą osobę.</div>
+    <div id="crewRows">
+      <div class="crew-row">
+        <div class="field"><label>Imię i nazwisko</label><input type="text" name="member_name[]" placeholder="np. Jan Kowalski"></div>
+        <div class="field"><label>Rola</label><input type="text" name="member_role[]" placeholder="np. Monter, brygadzista"></div>
+        <div class="field"><label>Lata doświadczenia</label><input type="number" name="member_years[]" placeholder="5" min="0"></div>
+        <div class="field"><label>Uprawnienia wys.</label>
+          <select name="member_height_cert[]"><option value="">Brak</option><option>Tak — do 3m</option><option>Tak — bez ograniczeń</option></select>
+        </div>
+        <button type="button" class="btn-remove" onclick="removeCrewRow(this)">×</button>
+      </div>
+    </div>
+    <button type="button" class="btn-add" id="addCrew">+ Dodaj członka ekipy</button>
+  </div>
+
+  <!-- 04 — ZAKRES PRAC -->
+  <div class="step" data-step="4">
+    <div class="step-head"><span class="step-num">04</span><span class="step-title">Zakres prac</span></div>
+    <div class="step-hint">Co realnie wykonujecie na miejscu.</div>
+    <div class="check-grid">
+      <label class="check-item"><input type="checkbox" name="scope" value="Pomiary przed montażem">Pomiary przed montażem</label>
+      <label class="check-item"><input type="checkbox" name="scope" value="Przygotowanie podłoża">Przygotowanie podłoża</label>
+      <label class="check-item"><input type="checkbox" name="scope" value="Montaż tapety/grafiki">Montaż tapety/grafiki</label>
+      <label class="check-item"><input type="checkbox" name="scope" value="Montaż dibond/plexi">Montaż dibond/plexi</label>
+      <label class="check-item"><input type="checkbox" name="scope" value="Demontaż starych instalacji">Demontaż starych instalacji</label>
+      <label class="check-item"><input type="checkbox" name="scope" value="Wykończenia i fugowanie">Wykończenia i fugowanie</label>
+      <label class="check-item"><input type="checkbox" name="scope" value="Czyszczenie po montażu">Czyszczenie po montażu</label>
+      <label class="check-item"><input type="checkbox" name="scope" value="Protokół odbioru">Protokół odbioru</label>
+    </div>
+    <div class="field full" style="margin-top:1rem;"><label>Inne</label><input type="text" name="scope_other" placeholder="Jeśli usługa nie jest na liście"></div>
+  </div>
+
+  <!-- 05 — RODZAJE PODŁOŻA -->
+  <div class="step" data-step="5">
+    <div class="step-head"><span class="step-num">05</span><span class="step-title">Rodzaje podłoża</span></div>
+    <div class="step-hint">Z czym macie realne doświadczenie montażowe.</div>
+    <div class="check-grid">
+      <label class="check-item"><input type="checkbox" name="surfaces" value="Tynk gładki">Tynk gładki</label>
+      <label class="check-item"><input type="checkbox" name="surfaces" value="Tynk strukturalny">Tynk strukturalny</label>
+      <label class="check-item"><input type="checkbox" name="surfaces" value="Płyta gipsowo-kartonowa">Płyta g-k</label>
+      <label class="check-item"><input type="checkbox" name="surfaces" value="Beton">Beton</label>
+      <label class="check-item"><input type="checkbox" name="surfaces" value="Drewno">Drewno</label>
+      <label class="check-item"><input type="checkbox" name="surfaces" value="Szkło">Szkło</label>
+      <label class="check-item"><input type="checkbox" name="surfaces" value="Metal">Metal</label>
+      <label class="check-item"><input type="checkbox" name="surfaces" value="Elewacja zewnętrzna">Elewacja zewnętrzna</label>
+    </div>
+  </div>
+
+  <!-- 06 — NARZĘDZIA I SPRZĘT -->
+  <div class="step" data-step="6">
+    <div class="step-head"><span class="step-num">06</span><span class="step-title">Narzędzia i sprzęt</span></div>
+    <div class="step-hint">Co macie na własność, nie wynajmowane na chwilę.</div>
+    <div class="check-grid">
+      <label class="check-item"><input type="checkbox" name="equipment" value="Rusztowanie własne">Rusztowanie własne</label>
+      <label class="check-item"><input type="checkbox" name="equipment" value="Podest/zwyżka">Podest / zwyżka</label>
+      <label class="check-item"><input type="checkbox" name="equipment" value="Laser pomiarowy">Laser pomiarowy</label>
+      <label class="check-item"><input type="checkbox" name="equipment" value="Narzędzia montażowe">Narzędzia montażowe</label>
+      <label class="check-item"><input type="checkbox" name="equipment" value="Transport własny (bus/ciężarówka)">Transport własny</label>
+      <label class="check-item"><input type="checkbox" name="equipment" value="Wyciągarka/podnośnik">Wyciągarka / podnośnik</label>
+    </div>
+    <div class="field full" style="margin-top:1rem;"><label>Inne</label><input type="text" name="equipment_other" placeholder="Jeśli sprzęt nie jest na liście"></div>
+  </div>
+
+  <!-- 07 — SKALA REALIZACJI -->
+  <div class="step" data-step="7">
+    <div class="step-head"><span class="step-num">07</span><span class="step-title">Skala realizacji</span></div>
+    <div class="step-hint">Realne limity, nie teoretyczne maksimum.</div>
+    <div class="grid-3">
+      <div class="field"><label>Maks. powierzchnia / dzień (m²)</label><input type="number" name="daily_capacity" placeholder="40"></div>
+      <div class="field"><label>Maks. wysokość montażu (m)</label><input type="number" name="max_height" placeholder="6"></div>
+      <div class="field"><label>Liczba równoległych projektów</label><input type="number" name="parallel_projects" placeholder="2" min="1"></div>
+    </div>
+  </div>
+
+  <!-- 08 — TERMINY I DOSTĘPNOŚĆ -->
+  <div class="step" data-step="8">
+    <div class="step-head"><span class="step-num">08</span><span class="step-title">Terminy i dostępność</span></div>
+    <div class="step-hint">Kiedy realnie możecie pojawić się na miejscu.</div>
+    <div class="grid-3" style="margin-bottom:1.4rem;">
+      <div class="field"><label>Standardowy czas reakcji (dni)</label><input type="number" name="response_time" placeholder="3"></div>
+      <div class="field"><label>Ekspres (dni)</label><input type="number" name="response_express" placeholder="1"></div>
+      <div class="field"><label>Min. wartość zlecenia (PLN)</label><input type="number" name="min_order_value" placeholder="500"></div>
+    </div>
+    <label style="margin-bottom:0.6rem; display:block;">Dni dostępności w tygodniu</label>
+    <div class="avail-grid">
+      <div class="avail-chip" data-day="Pon">Pon</div>
+      <div class="avail-chip" data-day="Wt">Wt</div>
+      <div class="avail-chip" data-day="Śr">Śr</div>
+      <div class="avail-chip" data-day="Czw">Czw</div>
+      <div class="avail-chip" data-day="Pt">Pt</div>
+      <div class="avail-chip" data-day="Sob">Sob</div>
+      <div class="avail-chip" data-day="Nd">Nd</div>
+    </div>
+    <input type="hidden" name="availability_days" id="availabilityInput">
+  </div>
+
+  <!-- 09 — LOGISTYKA -->
+  <div class="step" data-step="9">
+    <div class="step-head"><span class="step-num">09</span><span class="step-title">Logistyka</span></div>
+    <div class="step-hint">Jak organizujecie dojazd i materiał na miejscu.</div>
+    <div class="check-grid">
+      <label class="check-item"><input type="checkbox" name="logistics" value="Odbiór materiału z drukarni">Odbiór materiału z drukarni</label>
+      <label class="check-item"><input type="checkbox" name="logistics" value="Transport materiału na miejsce">Transport materiału na miejsce</label>
+      <label class="check-item"><input type="checkbox" name="logistics" value="Magazynowanie tymczasowe">Magazynowanie tymczasowe</label>
+      <label class="check-item"><input type="checkbox" name="logistics" value="Praca w wielu lokalizacjach naraz">Praca w wielu lokalizacjach</label>
+    </div>
+  </div>
+
+  <!-- 10 — BHP I CERTYFIKATY -->
+  <div class="step" data-step="10">
+    <div class="step-head"><span class="step-num">10</span><span class="step-title">BHP i certyfikaty</span></div>
+    <div class="step-hint">Dokumenty, które realnie macie, nie planujecie zdobyć.</div>
+    <div class="check-grid">
+      <label class="check-item"><input type="checkbox" name="certs" value="Uprawnienia wysokościowe">Uprawnienia wysokościowe</label>
+      <label class="check-item"><input type="checkbox" name="certs" value="Uprawnienia UDT (podesty)">Uprawnienia UDT</label>
+      <label class="check-item"><input type="checkbox" name="certs" value="Ubezpieczenie OC działalności">Ubezpieczenie OC</label>
+      <label class="check-item"><input type="checkbox" name="certs" value="Szkolenie BHP aktualne">Szkolenie BHP aktualne</label>
+    </div>
+    <div class="field full" style="margin-top:1rem;"><label>Inne</label><input type="text" name="certs_other" placeholder="Jeśli certyfikat nie jest na liście"></div>
+  </div>
+
+  <!-- 11 — PORTFOLIO -->
+  <div class="step" data-step="11">
+    <div class="step-head"><span class="step-num">11</span><span class="step-title">Portfolio</span></div>
+    <div class="step-hint">Zdjęcia z realnych montaży mówią więcej niż opis.</div>
+    <div class="upload-zone" id="dropZone">
+      <div class="upload-zone-icon">⬆</div>
+      <div class="upload-zone-text"><strong>Wybierz pliki</strong> lub przeciągnij zdjęcia z montaży tutaj</div>
+      <input type="file" id="fileInput" multiple accept="image/*" style="display:none;">
+    </div>
+    <div id="file-list"></div>
+    <div class="grid" style="margin-top:1.2rem;">
+      <div class="field"><label>Link do portfolio</label><input type="url" name="portfolio_link" placeholder="https://"></div>
+      <div class="field"><label>Instagram</label><input type="url" name="instagram" placeholder="https://instagram.com/..."></div>
+      <div class="field full"><label>Facebook</label><input type="url" name="facebook" placeholder="https://facebook.com/..."></div>
+    </div>
+  </div>
+
+  <!-- 12 — UWAGI -->
+  <div class="step" data-step="12">
+    <div class="step-head"><span class="step-num">12</span><span class="step-title">Uwagi</span></div>
+    <div class="step-hint">Wszystko, co nie zmieściło się w polach powyżej.</div>
+    <div class="field full">
+      <textarea name="notes" placeholder="Specjalizacje, ograniczenia, referencje, kontekst który warto znać przed pierwszym zleceniem..."></textarea>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    Wypełnienie formularza nie oznacza automatycznego nawiązania współpracy. Dane zostaną
+    wykorzystane wyłącznie do oceny możliwości wykonawczych oraz przyszłych projektów realizowanych
+    w ramach systemu WallStory.
+  </div>
+
+  <div class="submit-row">
+    <button type="submit" class="btn-submit">Wyślij zgłoszenie</button>
+    <span class="submit-note">Odpowiadamy w ciągu 3–5 dni roboczych.</span>
+  </div>
+</form>
+
+<div id="success">
+  <div class="mark">✓</div>
+  <h2>Zgłoszenie przyjęte.</h2>
+  <p>Profil ekipy trafił do bazy wykonawców WallStory. Skontaktujemy się, jeśli profil będzie odpowiadał konkretnemu zleceniu.</p>
+</div>
+
+<footer>
+  <span>4Matka MONTAŻ — AlPocket</span>
+  <span>System WallStory · 2026</span>
+</footer>
+
+<script>
+  const form = document.getElementById('qualForm');
+  const steps = Array.from(document.querySelectorAll('.step'));
+  const fillEl = document.getElementById('progressFill');
+  const pctEl = document.getElementById('progressPct');
+
+  function fieldHasValue(el) {
+    if (el.type === 'checkbox') return el.checked;
+    if (el.type === 'hidden') return el.value && el.value.trim().length > 0;
+    return el.value && el.value.trim().length > 0;
+  }
+
+  function updateProgress() {
+    let totalRequired = 0, filledRequired = 0;
+    let stepsWithData = 0;
+
+    steps.forEach(step => {
+      const inputs = step.querySelectorAll('input, select, textarea');
+      let stepHasAnyValue = false;
+      inputs.forEach(el => {
+        if (el.required) {
+          totalRequired++;
+          if (fieldHasValue(el)) filledRequired++;
+        }
+        if (fieldHasValue(el)) stepHasAnyValue = true;
+      });
+      step.classList.toggle('complete', stepHasAnyValue);
+      if (stepHasAnyValue) stepsWithData++;
+    });
+
+    const reqRatio = totalRequired ? filledRequired / totalRequired : 0;
+    const stepRatio = stepsWithData / steps.length;
+    const pct = Math.round((reqRatio * 0.6 + stepRatio * 0.4) * 100);
+
+    fillEl.style.width = pct + '%';
+    pctEl.textContent = pct + '%';
+  }
+
+  form.addEventListener('input', updateProgress);
+  form.addEventListener('change', updateProgress);
+
+  document.querySelectorAll('.check-item input[type=checkbox]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('.check-item').classList.toggle('checked', cb.checked);
+    });
+  });
+
+  // ---- Crew members repeatable rows ----
+  document.getElementById('addCrew').addEventListener('click', () => {
+    const wrap = document.getElementById('crewRows');
+    const row = document.createElement('div');
+    row.className = 'crew-row';
+    row.innerHTML = `
+      <div class="field"><label>Imię i nazwisko</label><input type="text" name="member_name[]" placeholder="np. Jan Kowalski"></div>
+      <div class="field"><label>Rola</label><input type="text" name="member_role[]" placeholder="np. Monter"></div>
+      <div class="field"><label>Lata doświadczenia</label><input type="number" name="member_years[]" placeholder="5" min="0"></div>
+      <div class="field"><label>Uprawnienia wys.</label>
+        <select name="member_height_cert[]"><option value="">Brak</option><option>Tak — do 3m</option><option>Tak — bez ograniczeń</option></select>
+      </div>
+      <button type="button" class="btn-remove" onclick="removeCrewRow(this)">×</button>
+    `;
+    wrap.appendChild(row);
+  });
+
+  function removeCrewRow(btn) {
+    const rows = document.querySelectorAll('.crew-row');
+    if (rows.length > 1) btn.closest('.crew-row').remove();
+    updateProgress();
+  }
+
+  // ---- Availability day chips ----
+  const availInput = document.getElementById('availabilityInput');
+  const activeDays = new Set();
+  document.querySelectorAll('.avail-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const day = chip.dataset.day;
+      chip.classList.toggle('active');
+      if (activeDays.has(day)) activeDays.delete(day); else activeDays.add(day);
+      availInput.value = Array.from(activeDays).join(',');
+      updateProgress();
+    });
+  });
+
+  // ---- File upload ----
+  const dropZone = document.getElementById('dropZone');
+  const fileInput = document.getElementById('fileInput');
+  const fileList = document.getElementById('file-list');
+  let uploadedFiles = [];
+
+  dropZone.addEventListener('click', () => fileInput.click());
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+  fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+  function handleFiles(files) {
+    Array.from(files).forEach(f => uploadedFiles.push(f.name));
+    renderFileList();
+    updateProgress();
+  }
+
+  function renderFileList() {
+    fileList.innerHTML = '';
+    uploadedFiles.forEach((name, i) => {
+      const chip = document.createElement('div');
+      chip.className = 'file-chip';
+      chip.innerHTML = `<span>${name}</span><span style="cursor:pointer;color:var(--muted2)" data-i="${i}">×</span>`;
+      chip.querySelector('span[data-i]').addEventListener('click', () => {
+        uploadedFiles.splice(i, 1);
+        renderFileList();
+        updateProgress();
+      });
+      fileList.appendChild(chip);
+    });
+  }
+
+  // ---- Submit: build JSON payload ----
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+
+    const data = new FormData(form);
+    const payload = {};
+    for (const [key, value] of data.entries()) {
+      if (key.endsWith('[]')) {
+        const cleanKey = key.slice(0, -2);
+        if (!payload[cleanKey]) payload[cleanKey] = [];
+        payload[cleanKey].push(value);
+      } else if (payload[key]) {
+        if (!Array.isArray(payload[key])) payload[key] = [payload[key]];
+        payload[key].push(value);
+      } else {
+        payload[key] = value;
+      }
+    }
+    payload.portfolio_files = uploadedFiles;
+    payload.submitted_at = new Date().toISOString();
+    payload.form_id = '4matka-montaz-v1';
+
+    // Placeholder for future API call:
+    // fetch('/api/partners/crew', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) })
+
+    console.log('4Matka MONTAŻ submission payload:', payload);
+
+    form.style.display = 'none';
+    document.getElementById('success').classList.add('show');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  updateProgress();
+</script>
+
+</body>
+</html>
